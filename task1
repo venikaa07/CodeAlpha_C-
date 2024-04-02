@@ -1,1 +1,40 @@
+//  Task-1.cpp
+//  
+//
+//  Created by Venika Chaudhary on 02/04/24.
+//
+#include <iostream>
+#include <stdio.h>
+#include <cstdlib>
+
+
+using namespace std;
+
+int main() {
+    srand(static_cast<unsigned int>(time(0)));
+    int secretNumber = rand() % 100 + 1;
+    int guess;
+    int total_attempts = 0;
+    cout << "Welcome to the Number Guessing Game! built by Venika in C++! \n";
+    cout << "A number has been selected between 1 and 100. Can you guess it? \n";
+    do {
+        cout << "Enter the guess number : ";
+        cin >> guess;
+        total_attempts++;
+
+        if (guess > secretNumber){
+            cout << "Number guessed is too high! Try again...\n";
+        } 
+        else if (guess < secretNumber){
+            cout << "Number guessed is too low! Try again...\n";
+        }
+        else{
+            cout << "YOU WON! You guessed the correct number " << secretNumber << "\n";
+            cout << "Total attempts : " << total_attempts << "\n";
+        }
+    } 
+    while (guess != secretNumber);
+
+    return 0;
+}
 

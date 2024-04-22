@@ -1,1 +1,95 @@
+//
+//  Task-2.cpp
+//  Internship
+//
+//  Created by Venika Chaudhary on 02/04/24.
+//
+
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+void listDirectory(const std::string& path) {
+    std::cout << "Listing directory: " << path << std::endl;
+    for (const auto& entry : fs::directory_iterator(path)) {
+        std::cout << entry.path().filename() << std::endl;
+    }
+}
+
+void viewFile(const std::string& filePath) {
+    std::cout << "Viewing file: " << filePath << std::endl;
+    std::ifstream file(filePath);
+    if (file.is_open()) {
+        std::string line;
+        while (std::getline(file, line)) {
+            std::cout << line << std::endl;
+        }
+        file.close();
+    } else {
+        std::cerr << "Unable to open file: " << filePath << std::endl;
+    }
+}
+
+void createDirectory(const std::string& dirPath) {
+    if (fs::create_directory(dirPath)) {
+        std::cout << "Directory created: " << dirPath << std::endl;
+    } else {
+        std::cerr << "Failed to create directory: " << dirPath << std::endl;
+    }
+}
+
+void copyFile(const std::string& sourcePath, const std::string& destinationPath) {
+    try {
+        fs::copy(sourcePath, destinationPath, fs::copy_options::overwrite_existing);
+        std::cout << "File copied from " << sourcePath << " to " << destinationPath << std::endl;
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Failed to copy file: " << e.what() << std::endl;
+    }
+}
+
+void moveFile(const std::string& sourcePath, const std::string& destinationPath) {
+    try {
+        fs::rename(sourcePath, destinationPath);
+        std::cout << "File moved from " << sourcePath << " to " << destinationPath << std::endl;
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Failed to move file: " << e.what() << std::endl;
+    }
+}
+
+int main() {
+    std::string command;
+    std::string arg1, arg2;
+
+    while (true) {
+        std::cout << "\nEnter command: ";
+        std::getline(std::cin, command);
+
+        std::istringstream iss(command);
+        iss >> arg1 >> arg2;
+
+        if (command == "exit") {
+            break;
+        } else if (command == "ls") {
+            listDirectory(".");
+        } else if (command == "view") {
+            viewFile(arg1);
+        } else if (command == "mkdir") {
+            createDirectory(arg1);
+        } else if (command == "cp") {
+            copyFile(arg1, arg2);
+        } else if (command == "mv") {
+            moveFile(arg1, arg2);
+        } else {
+            std::cerr << "Invalid command..." << std::endl;
+        }
+    }
+
+    return 0;
+}
 

@@ -1,1 +1,87 @@
+//
+//  Task-3.cpp
+//  Internship
+//
+//  Created by Venika Chaudhary on 2/04/24.
+//
+
+#include <stdio.h>
+#include <iostream>
+#include <vector>
+const int n = 9;
+const int EMPTY = 0;
+void printGrid(const std::vector<std::vector<int>>& grid) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cout << grid[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+bool isValid(const std::vector<std::vector<int>>& grid, int row, int col, int num) {
+    for (int i = 0; i < n; ++i) {
+        if (grid[row][i] == num || grid[i][col] == num) {
+            return false;
+        }
+    }
+    int startRow = row - row % 3;
+    int startCol = col - col % 3;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if (grid[startRow + i][startCol + j] == num) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+bool solveSudoku(std::vector<std::vector<int>>& grid) {
+    int row, col;
+    bool isEmpty = false;
+    for (row = 0; row < n; ++row) {
+        for (col = 0; col < n; ++col) {
+            if (grid[row][col] == EMPTY) {
+                isEmpty = true;
+                break;
+            }
+        }
+        if (isEmpty) {
+            break;
+        }
+    }
+    if (!isEmpty) {
+        return true;
+    }
+    for (int num = 1; num <= 9; ++num) {
+        if (isValid(grid, row, col, num)) {
+            grid[row][col] = num;
+            if (solveSudoku(grid)) {
+                return true;
+            }
+            grid[row][col] = EMPTY;
+        }
+    }
+    return false;
+}
+int main() {
+    std::vector<std::vector<int>> grid = {
+        {5, 0, 0, 8, 0, 7, 0, 0, 0},
+        {0, 0, 4, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0}
+    };
+    
+    if (solveSudoku(grid)) {
+        std::cout << "The Sudoku Puzzle is solved:-" << std::endl;
+        printGrid(grid);
+    } else {
+        std::cout << "No solution found ....." << std::endl;
+    }
+    return 0;
+}
 
